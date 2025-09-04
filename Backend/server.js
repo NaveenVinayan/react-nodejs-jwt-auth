@@ -18,7 +18,7 @@ const port = 5000 ;
 // Use CORS Middleware
 app.use(
   cors({
-    origin: "http://localhost:5173", // Allow requests from your frontend origin
+    origin: "https://react-nodejs-jwt-auth.vercel.app", // Allow requests from your frontend origin
     credentials: true, // Allow credentials (cookies, authorization headers)
   })
 );
