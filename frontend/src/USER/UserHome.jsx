@@ -1,6 +1,5 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import userAuthStore from '../store/authStore';
 import { logoutUser } from '../api/userService';
 
 function UserHome() {
@@ -10,11 +9,10 @@ function UserHome() {
 
   const logout = async () => {
     const res = await logoutUser();
-    console.log(res, 'from backend');
+
     sessionStorage.removeItem("user-auth-storage");
     navigate('/')
   }
-
 
 
   return (

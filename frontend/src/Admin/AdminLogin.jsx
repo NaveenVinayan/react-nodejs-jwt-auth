@@ -1,6 +1,8 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { data, Link, useNavigate } from 'react-router-dom'
+import { loginAdmin } from '../api/adminService'
+import userAuthStore from '../store/authStore'
 
 function AdminLogin() {
 
@@ -10,6 +12,7 @@ function AdminLogin() {
   })
 
   const navigate = useNavigate()
+  const setUser = userAuthStore((state) => state.setUser);
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -17,11 +20,11 @@ function AdminLogin() {
     if (!email || !password) {
       alert("Please fill the form completely")
     } else {
-      const res = await axios.post('http://localhost:3000/admin/login', { email, password })
-      console.log(res.data, 'from backend');
+      const res = await loginAdmin({ email, password })
+
       if (res.status === 200) {
         alert('login sucessfull')
-        localStorage.setItem("data", JSON.stringify(res.data.cookie))
+        setUser(res);
         navigate('/dashboard')
       } else {
         alert('error')

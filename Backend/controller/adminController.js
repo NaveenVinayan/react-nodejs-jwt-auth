@@ -2,6 +2,7 @@ const adminSchema = require("../model/adminModal");
 const bcrypt = require("bcrypt");
 const userSchema = require("../model/userModel");
 const { default: asyncHandler } = require("../middlewares/asyncHandler");
+const { default: createToken } = require("../utils/createToken");
 
 const login = asyncHandler(async (req, res) => {
   try {
@@ -16,7 +17,8 @@ const login = asyncHandler(async (req, res) => {
     if (!isMatch)
       return res.status(401).json({ message: "Invalid credentials" });
 
-    createToken(req, res, user._id);
+    createToken(req, res, admin._id);
+
     return res.status(200).json({ message: "Login successfully",  _id: admin._id, email: admin.email });
   } catch (error) {
     console.error(error);
@@ -62,7 +64,6 @@ const deleteUser = asyncHandler(async (req, res) => {
 const addUser = asyncHandler(async (req, res) => {
   try {
     const { email, password } = req.body;
-    // console.log(email,password)
 
     const user = await userSchema.findOne({ email });
 

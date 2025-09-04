@@ -27,6 +27,7 @@ const registerUser = async (userData) => {
   }
 };
 
+
 const logoutUser = async () => {
   try {
     const response = await axiosInstance.post("user/logout");

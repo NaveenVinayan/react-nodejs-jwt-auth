@@ -24,7 +24,6 @@ function Register() {
     }
     else {
       const res = await registerUser({ email, password })
-      console.log(res.data, 'from backend');
 
       if (res.status === 200) {
         alert('Register sucessfull')

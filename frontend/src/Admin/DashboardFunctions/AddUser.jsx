@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { addUser, allUser } from '../../api/adminService';
 
 function AddUser() {
     // MODAL OPEN
@@ -17,21 +18,20 @@ function AddUser() {
 
     // TABLEE DATA REFRESH
     useEffect(() => {
-        axios.get('http://localhost:3000/admin/alluser')
-            .catch(err => console.log(err))
+        allUser()
     }, [])
 
     // ADD USER
     const handleRegister = async (e) => {
         e.preventDefault()
         const { email, password } = userData
-        console.log(email,password)
+
         if (!email || !password) {
             alert("Please fill the form completely")
         }
         else {
-            const res = await axios.post('http://localhost:3000/admin/add-user', { email, password })
-            console.log(res.data, 'from backend');
+            const res = await addUser({ email, password })
+
             if (res.status === 200) {
                 alert('Register sucessfull')
                 setOpen(false)

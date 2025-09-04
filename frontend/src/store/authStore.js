@@ -9,7 +9,7 @@ const userAuthStore = create(
         isAuthenticated: false,
         setUser: (user) => set({ user, isAuthenticated: true }),
 
-        logout: async () => {
+        userLogout: async () => {
           try {
             await fetch("http://localhost:5000/user/logout", {
               method: "POST",
@@ -20,6 +20,19 @@ const userAuthStore = create(
             console.error("Logout error:", error);
           }
         },
+        
+        adminLogout: async () => {
+          try {
+            await fetch("http://localhost:5000/admin/logout", {
+              method: "POST",
+              credentials: "include", // Include cookies for logout
+            });
+            set({ user: null, isAuthenticated: false});
+          } catch (error) {
+            console.error("Logout error:", error);
+          }
+        }
+
       }),
       {
         name: "user-auth-storage", // A unique key for sessionStorage

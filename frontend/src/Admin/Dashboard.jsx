@@ -3,20 +3,16 @@ import React, { useEffect } from 'react'
 import { useState } from 'react';
 import AddUser from './DashboardFunctions/AddUser';
 import { useNavigate } from 'react-router-dom';
+import { allUser, deleteUser, editUser, logoutAdmin } from '../api/adminService';
 
 function Dashboard() {
   // USER DETAILS FOR MAP
   const [data, setData] = useState([])
 
-
   // MODAL OPEN
-
   const [open, setOpen] = useState(false);
    
-
-
   const [editUserId, setEditUserId] = useState('');
-
 
 
 
@@ -29,10 +25,12 @@ function Dashboard() {
 
 
   // logout
-  const logout = (() =>{
-    localStorage.clear();
+  const logout = async () => {
+    const res = await logoutAdmin();
+
+    sessionStorage.removeItem("user-auth-storage");
     navigate('/adminlogin')
-  })
+  }
 
   // Update User
   const handleUpdate = async (e) => {
@@ -42,11 +40,11 @@ function Dashboard() {
       alert("Please fill the form completely")
     }
     else {
-      const res = await axios.post('http://localhost:3000/admin/edit-user', {    _id:editUserId,    email, password })
-      console.log(res.data, 'from backend');
+      const res = await editUser({  _id:editUserId,  email, password })
       if (res.status === 200) {
         alert('updated sucessfully')
-        navigate('/dashboard')
+        setOpen(false)
+    
       } else {
         alert('error')
       }
@@ -54,22 +52,20 @@ function Dashboard() {
   }
 
 
-
   // TAKE DATA FROM DB FOR MAPPING
   useEffect(() => {
-    axios.get('http://localhost:3000/admin/alluser')
+    allUser()
       .then(res => {
         setData(res.data.data);
       })
-      .catch(err => console.log(err))
+      
   }, [handleDelete,handleUpdate])
 
   // DELETE FUNCTION
   function handleDelete(_id, index) {
-    console.log(_id)
     const confirm = window.confirm(`Would you like to Delete? ${index + 1} `);
     if (confirm) {
-      axios.get(`http://localhost:3000/admin/delete-user/${_id}`)
+      deleteUser(_id)
         .then(res => {
           alert("Record Deleted")
         })
@@ -125,7 +121,6 @@ function Dashboard() {
                         setEditUserId(user._id);
                         setUpdateData({email: user.email, password: ""});
 
-
                         setOpen(true);
 
                       }}
@@ -162,7 +157,7 @@ function Dashboard() {
                                 <input type="password" value={updateData.password} onChange={e => setUpdateData({ ...updateData, password: e.target.value })} name={`password-${user._id}`} id={`password-${user._id}`} placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
                               </div>
 
-                              <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add user to server</button>
+                              <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Update user</button>
                             </form>
                           </div>
                         </div>

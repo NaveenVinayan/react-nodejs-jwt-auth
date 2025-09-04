@@ -22,7 +22,6 @@ function Login() {
       alert("Please fill the form completely")
     } else {
       const res = await loginUser({ email, password });
-      console.log(res, 'from backend');
 
       if (res.status === 200) {
         alert('login sucessfull')
