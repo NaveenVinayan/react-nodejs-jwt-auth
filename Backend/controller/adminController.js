@@ -95,7 +95,7 @@ const allUser = asyncHandler(async (req, res) => {
   }
 });
 
-const logoutUser = asyncHandler(async (req,res) => {
+const logout = asyncHandler(async (req,res) => {
   res.cookie("jwt", "", {
     httpOnly: true,
     expiresIn: new Date(0),
@@ -110,5 +110,5 @@ module.exports = {
   deleteUser,
   addUser,
   allUser,
-  logoutUser
+  logout
 };

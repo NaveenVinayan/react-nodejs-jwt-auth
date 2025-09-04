@@ -1,13 +1,17 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import userAuthStore from '../store/authStore';
+import { logoutUser } from '../api/userService';
 
 function UserHome() {
 
   const navigate = useNavigate()
 
 
-  const logout = () => {
+  const logout = async () => {
+    const res = await logoutUser();
+    console.log(res, 'from backend');
+    sessionStorage.removeItem("user-auth-storage");
     navigate('/')
   }
 

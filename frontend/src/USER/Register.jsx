@@ -1,6 +1,8 @@
 import axios from 'axios'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { registerUser } from '../api/userService'
+import userAuthStore from '../store/authStore'
 
 function Register() {
   const [userData, setUserData] = useState({
@@ -9,7 +11,8 @@ function Register() {
     confirmPassword: ""
   })
 
-
+  const setUser = userAuthStore((state) => state.setUser);
+  const navigate = useNavigate()
 
   const handleRegister = async (e) => {
     e.preventDefault()
@@ -20,10 +23,13 @@ function Register() {
       alert("Password does not match")
     }
     else {
-      const res = await axios.post('http://localhost:3000/user/register', { email, password })
+      const res = await registerUser({ email, password })
       console.log(res.data, 'from backend');
+
       if (res.status === 200) {
         alert('Register sucessfull')
+        setUser(res);
+        navigate('/userHome')
       } else {
         alert('error')
       }
